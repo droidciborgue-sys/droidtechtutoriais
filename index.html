@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DroidTech Downloads</title>
+  <link rel="icon" href="Logo%20Canal%20DroidTech.png">
+  <style>
+    :root {
+      --bg: #03060f;
+      --card: #0a1224;
+      --border: #12306b;
+      --text: #eaf2ff;
+      --muted: #8da2c8;
+      --neon: #1e7bff;
+      --cyan: #22d3ee;
+      --red: #ff0033;
+      --red-hover: #d9002b;
+      --disabled: #1a2440;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #0b2a6b 0%, var(--bg) 60%);
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .card {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(30, 123, 255, .25);
+    }
+    .banner {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1983 / 793;
+      object-fit: cover;
+    }
+    .logo {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      border: 3px solid var(--neon);
+      box-shadow: 0 0 24px rgba(30, 123, 255, .7);
+      margin-top: -56px;
+      position: relative;
+      background: #000;
+    }
+    .content { padding: 12px 24px 32px; }
+    h1 { font-size: 1.6rem; margin: 8px 0 4px; letter-spacing: .5px; }
+    h1 span { color: var(--neon); }
+    .sub { color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 20px;
+      border: 0;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .15s, box-shadow .15s;
+    }
+    .btn-yt { background: var(--red); }
+    .btn-yt:hover { background: var(--red-hover); }
+    .btn-dl {
+      background: linear-gradient(90deg, var(--neon), var(--cyan));
+      box-shadow: 0 0 18px rgba(34, 211, 238, .45);
+      margin-top: 10px;
+    }
+    .btn-dl:hover { box-shadow: 0 0 28px rgba(34, 211, 238, .75); }
+    .btn[aria-disabled="true"] {
+      background: var(--disabled);
+      box-shadow: none;
+      color: var(--muted);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .status { color: var(--muted); font-size: .9rem; margin: 12px 0 4px; min-height: 1.2em; }
+    .status.ok { color: var(--cyan); }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
+    .file { text-align: left; }
+    .file h2 { font-size: 1.05rem; }
+    .file p { color: var(--muted); font-size: .85rem; margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img class="banner" src="Banner%20futurista%20DROIDTECH%20em%20neon%20azul.png" alt="Banner do canal DroidTech">
+    <img class="logo" src="Logo%20Canal%20DroidTech.png" alt="Logo DroidTech">
+
+    <div class="content">
+      <h1>Droid<span>Tech</span> Downloads</h1>
+      <p class="sub">Se inscreva no canal para liberar o download 👇</p>
+
+      <a class="btn btn-yt" id="subBtn" href="#" target="_blank" rel="noopener">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+        Inscrever-se no canal
+      </a>
+
+      <p class="status" id="status">Clique no botão acima para liberar o download.</p>
+
+      <hr>
+
+      <div id="files"></div>
+    </div>
+  </main>
+
+  <script>
+    // ===== CONFIGURAÇÃO =====
+    const CHANNEL_URL = "https://www.youtube.com/@DroidTech90";
+    const WAIT_SECONDS = 10; // tempo de espera depois do clique em "Inscrever-se"
+
+    const FILES = [
+      { name: "OneClickFirewall", info: "OneClickFirewall.zip · 318 KB", url: "OneClickFirewall.zip" },
+    ];
+    // ========================
+
+    const STORAGE_KEY = "droidtech_unlocked";
+    const subBtn = document.getElementById("subBtn");
+    const statusEl = document.getElementById("status");
+    const filesEl = document.getElementById("files");
+
+    subBtn.href = CHANNEL_URL + "?sub_confirmation=1";
+
+    filesEl.innerHTML = FILES.map((f, i) => `
+      <div class="file" style="margin-top:${i ? 20 : 0}px">
+        <h2>${f.name}</h2>
+        <p>${f.info}</p>
+        <a class="btn btn-dl" href="${f.url}" download aria-disabled="true" tabindex="-1">
+          🔒 Bloqueado
+        </a>
+      </div>
+    `).join("");
+
+    function unlock() {
+      statusEl.textContent = "✅ Download liberado! Obrigado pela inscrição.";
+      statusEl.classList.add("ok");
+      filesEl.querySelectorAll(".btn-dl").forEach(btn => {
+        btn.removeAttribute("aria-disabled");
+        btn.removeAttribute("tabindex");
+        btn.textContent = "⬇️ Baixar";
+      });
+      try { localStorage.setItem(STORAGE_KEY, "1"); } catch (e) {}
+    }
+
+    let started = false;
+    subBtn.addEventListener("click", () => {
+      if (started) return;
+      started = true;
+      let left = WAIT_SECONDS;
+      const tick = () => statusEl.textContent = `Confirme a inscrição na aba do YouTube... liberando em ${left}s`;
+      tick();
+      const timer = setInterval(() => {
+        left--;
+        if (left <= 0) {
+          clearInterval(timer);
+          unlock();
+        } else {
+          tick();
+        }
+      }, 1000);
+    });
+
+    // Quem já liberou antes não precisa repetir
+    try { if (localStorage.getItem(STORAGE_KEY) === "1") unlock(); } catch (e) {}
+  </script>
+</body>
+</html>
